@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Giải Đấu Cầu Lông</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+                color: #333;
+            }
+
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+
+            .header {
+                background: rgba(255, 255, 255, 0.95);
+                padding: 20px;
+                border-radius: 15px;
+                margin-bottom: 20px;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+
+            .header h1 {
+                text-align: center;
+                color: #2c3e50;
+                margin-bottom: 10px;
+                font-size: 2.5em;
+                background: linear-gradient(45deg, #667eea, #764ba2);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            .auth-section {
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+
+            .btn {
+                padding: 12px 24px;
+                border: none;
+                border-radius: 25px;
+                cursor: pointer;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            .btn-primary {
+                background: linear-gradient(45deg, #667eea, #764ba2);
+                color: white;
+            }
+
+            .btn-secondary {
+                background: linear-gradient(45deg, #36d1dc, #5b86e5);
+                color: white;
+            }
+
+            .btn-danger {
+                background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+                color: white;
+            }
+
+            .btn-success {
+                background: linear-gradient(45deg, #51cf66, #40c057);
+                color: white;
+            }
+
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            }
+
+            .card {
+                background: rgba(255, 255, 255, 0.95);
+                padding: 25px;
+                border-radius: 15px;
+                margin-bottom: 20px;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                transition: transform 0.3s ease;
+            }
+
+            .card:hover {
+                /* transform: translateY(-5px); */
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: 600;
+                color: #2c3e50;
+            }
+
+            .form-group input,
+            .form-group select {
+                width: 100%;
+                padding: 12px;
+                border: 2px solid #e0e6ed;
+                border-radius: 10px;
+                font-size: 16px;
+                transition: border-color 0.3s ease;
+                background: rgba(255, 255, 255, 0.9);
+            }
+
+            .form-group input:focus,
+            .form-group select:focus {
+                outline: none;
+                border-color: #667eea;
+                box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            }
+
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 20px;
+            }
+
+            .player-card {
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                color: white;
+                padding: 20px;
+                border-radius: 15px;
+                text-align: center;
+                transition: transform 0.3s ease;
+            }
+
+            .player-card:hover {
+                transform: scale(1.05);
+            }
+
+            .match-card {
+                background: linear-gradient(135deg, #36d1dc, #5b86e5);
+                color: white;
+                padding: 20px;
+                border-radius: 15px;
+                margin-bottom: 15px;
+            }
+
+            .level-badge {
+                padding: 5px 15px;
+                border-radius: 20px;
+                font-size: 12px;
+                font-weight: bold;
+                display: inline-block;
+                margin: 5px;
+            }
+
+            .level-1 {
+                background: #51cf66;
+                color: white;
+            }
+            .level-2 {
+                background: #ffd43b;
+                color: #333;
+            }
+            .level-3 {
+                background: #ff6b6b;
+                color: white;
+            }
+
+            .hidden {
+                display: none;
+            }
+
+            .nav-tabs {
+                display: flex;
+                background: rgba(255, 255, 255, 0.9);
+                border-radius: 10px;
+                padding: 5px;
+                margin-bottom: 20px;
+            }
+
+            .nav-tab {
+                flex: 1;
+                padding: 12px;
+                text-align: center;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-weight: 600;
+            }
+
+            .nav-tab.active {
+                background: linear-gradient(45deg, #667eea, #764ba2);
+                color: white;
+            }
+
+            .ranking-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+
+            .ranking-table th,
+            .ranking-table td {
+                padding: 15px;
+                text-align: left;
+                border-bottom: 2px solid #e0e6ed;
+            }
+
+            .ranking-table th {
+                background: linear-gradient(45deg, #667eea, #764ba2);
+                color: white;
+                font-weight: 600;
+            }
+
+            .ranking-table tr:hover {
+                background: rgba(102, 126, 234, 0.1);
+            }
+
+            .score-input {
+                width: 60px;
+                padding: 8px;
+                margin: 0 5px;
+                border: 2px solid #ddd;
+                border-radius: 5px;
+                text-align: center;
+            }
+
+            .match-result {
+                background: rgba(255, 255, 255, 0.9);
+                padding: 15px;
+                border-radius: 10px;
+                margin: 10px 0;
+            }
+
+            @media (max-width: 768px) {
+                .grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .auth-section {
+                    flex-direction: column;
+                    align-items: center;
+                }
+
+                .nav-tabs {
+                    flex-direction: column;
+                }
+            }
+
+            @media (max-width: 768px) {
+                .container {
+                    padding: 10px;
+                }
+
+                .header h1 {
+                    font-size: 1.8em;
+                }
+
+                .auth-section {
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 15px; /* thêm khoảng cách giữa các nút */
+                }
+
+                .btn {
+                    width: 100%;
+                    text-align: center;
+                    margin-bottom: 10px; /* thêm khoảng cách dưới mỗi nút */
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>🏸 Giải Đấu Cầu Lông</h1>
+                <div class="auth-section">
+                    <button class="btn btn-primary" onclick="showLogin()">Đăng nhập</button>
+                    <button class="btn btn-secondary" onclick="showRegister()">Đăng ký</button>
+                    <button class="btn btn-danger hidden" id="logoutBtn" onclick="logout()">Đăng xuất</button>
+                </div>
+                <div id="userInfo" class="hidden" style="text-align: center; margin-top: 10px; font-weight: 600;"></div>
+            </div>
+
+            <!-- Form đăng nhập -->
+            <div id="loginForm" class="card hidden">
+                <h2>Đăng nhập</h2>
+                <div class="form-group">
+                    <label>Tên đăng nhập:</label>
+                    <input type="text" id="loginUsername" placeholder="Nhập tên đăng nhập" />
+                </div>
+                <div class="form-group">
+                    <label>Mật khẩu:</label>
+                    <input type="password" id="loginPassword" placeholder="Nhập mật khẩu" />
+                </div>
+                <button class="btn btn-primary" onclick="login()">Đăng nhập</button>
+                <button class="btn btn-secondary" onclick="hideAuth()">Hủy</button>
+            </div>
+
+            <!-- Form đăng ký -->
+            <div id="registerForm" class="card hidden">
+                <h2>Đăng ký thành viên</h2>
+                <div class="form-group">
+                    <label>Tên đăng nhập:</label>
+                    <input type="text" id="playerUsername" placeholder="Nhập tên đăng nhập" />
+                </div>
+                <div class="form-group">
+                    <label>Mật khẩu:</label>
+                    <input type="password" id="playerPassword" placeholder="Nhập mật khẩu" />
+                </div>
+                <div class="form-group">
+                    <label>Trình độ:</label>
+                    <select id="playerLevel">
+                        <option value="1">Level 1 - Mới bắt đầu</option>
+                        <option value="2">Level 2 - Trung bình</option>
+                        <option value="3">Level 3 - Cao cấp</option>
+                    </select>
+                </div>
+                <button class="btn btn-success" onclick="registerPlayer()">Đăng ký</button>
+                <button class="btn btn-secondary" onclick="hideAuth()">Hủy</button>
+            </div>
+
+            <!-- Main content -->
+            <div id="mainContent" class="hidden">
+                <div class="nav-tabs">
+                    <div class="nav-tab active" onclick="showTab('players')">Danh sách thành viên</div>
+                    <div class="nav-tab" onclick="showTab('teams')">Danh sách đội</div>
+                    <div class="nav-tab" onclick="showTab('matches')">Lịch thi đấu</div>
+                    <div class="nav-tab" onclick="showTab('results')">Kết quả</div>
+                    <div class="nav-tab" onclick="showTab('ranking')">Bảng xếp hạng</div>
+                </div>
+
+                <!-- Tab danh sách thành viên -->
+                <div id="playersTab" class="tab-content">
+                    <div class="card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h2>Danh sách thành viên</h2>
+                            <div id="adminControls" class="hidden">
+                                <button class="btn btn-primary" onclick="generateTeams()">Tạo đội thi đấu</button>
+                                <button class="btn btn-secondary" onclick="clearAllData()">Xóa dữ liệu</button>
+                            </div>
+                        </div>
+                        <div id="playersList" class="grid"></div>
+                    </div>
+                </div>
+
+                <!-- Tab danh sách đội -->
+                <div id="teamsTab" class="tab-content hidden">
+                    <div class="card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h2>Danh sách đội thi đấu</h2>
+                            <div id="scheduleControls" class="hidden">
+                                <button class="btn btn-primary" onclick="generateSchedule()">Tạo lịch thi đấu</button>
+                            </div>
+                        </div>
+                        <div id="teamsList" class="grid"></div>
+                    </div>
+                </div>
+
+                <!-- Tab lịch thi đấu -->
+                <div id="matchesTab" class="tab-content hidden">
+                    <div class="card">
+                        <h2>Lịch thi đấu hôm nay</h2>
+                        <div id="matchesList"></div>
+                    </div>
+                </div>
+
+                <!-- Tab kết quả -->
+                <div id="resultsTab" class="tab-content hidden">
+                    <div class="card">
+                        <h2>Cập nhật kết quả</h2>
+                        <div id="resultsForm"></div>
+                    </div>
+                </div>
+
+                <!-- Tab bảng xếp hạng -->
+                <div id="rankingTab" class="tab-content hidden">
+                    <div class="card">
+                        <h2>Bảng xếp hạng</h2>
+                        <table class="ranking-table">
+                            <thead>
+                                <tr>
+                                    <th>Hạng</th>
+                                    <th>Tên nhóm</th>
+                                    <th>Thành viên</th>
+                                    <th>Điểm</th>
+                                    <th>Thắng</th>
+                                    <th>Thua</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rankingBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Dữ liệu toàn cục
+            let currentUser = null;
+            let players = JSON.parse(localStorage.getItem("players") || "[]");
+            let teams = JSON.parse(localStorage.getItem("teams") || "[]");
+            let matches = JSON.parse(localStorage.getItem("matches") || "[]");
+            let results = JSON.parse(localStorage.getItem("results") || "[]");
+            let lastMatchTimes = {}; // Theo dõi thời gian trận đấu cuối của mỗi đội
+
+            // Admin mặc định
+            const adminUser = {
+                username: "admin",
+                password: "admin123",
+                role: "admin",
+            };
+
+            // Khởi tạo
+            document.addEventListener("DOMContentLoaded", function () {
+                displayPlayers();
+                displayMatches();
+                displayResults();
+                updateRanking();
+            });
+
+            // Xác thực
+            function showLogin() {
+                hideAuth();
+                document.getElementById("loginForm").classList.remove("hidden");
+            }
+
+            function showRegister() {
+                hideAuth();
+                document.getElementById("registerForm").classList.remove("hidden");
+            }
+
+            function hideAuth() {
+                document.getElementById("loginForm").classList.add("hidden");
+                document.getElementById("registerForm").classList.add("hidden");
+            }
+
+            function login() {
+                const username = document.getElementById("loginUsername").value;
+                const password = document.getElementById("loginPassword").value;
+
+                if (!username || !password) {
+                    alert("Vui lòng nhập đầy đủ thông tin!");
+                    return;
+                }
+
+                // Kiểm tra admin
+                if (username === adminUser.username && password === adminUser.password) {
+                    currentUser = adminUser;
+                    showMainContent();
+                    return;
+                }
+
+                // Kiểm tra user
+                const user = players.find((p) => p.username === username && p.password === password);
+                if (user) {
+                    currentUser = { ...user, role: "user" };
+                    showMainContent();
+                } else {
+                    alert("Tên đăng nhập hoặc mật khẩu không đúng!");
+                }
+            }
+
+            function registerPlayer() {
+                const username = document.getElementById("playerUsername").value;
+                const password = document.getElementById("playerPassword").value;
+                const level = parseInt(document.getElementById("playerLevel").value);
+
+                if (!username || !password) {
+                    alert("Vui lòng nhập đầy đủ thông tin!");
+                    return;
+                }
+
+                if (players.find((p) => p.username === username)) {
+                    alert("Tên đăng nhập đã được sử dụng!");
+                    return;
+                }
+
+                const player = {
+                    id: Date.now(),
+                    username,
+                    password,
+                    level,
+                    registeredAt: new Date().toISOString(),
+                };
+
+                players.push(player);
+                localStorage.setItem("players", JSON.stringify(players));
+
+                alert("Đăng ký thành công!");
+                hideAuth();
+                displayPlayers();
+
+                // Reset form
+                document.getElementById("playerUsername").value = "";
+                document.getElementById("playerPassword").value = "";
+            }
+
+            function showMainContent() {
+                hideAuth();
+                document.getElementById("mainContent").classList.remove("hidden");
+                document.getElementById("logoutBtn").classList.remove("hidden");
+                document.querySelector(".btn-primary").classList.add("hidden");
+                document.querySelector(".btn-secondary").classList.add("hidden");
+
+                const userInfo = document.getElementById("userInfo");
+                userInfo.textContent = `Xin chào, ${currentUser.username} (${currentUser.role === "admin" ? "Quản trị viên" : "Thành viên"})`;
+                userInfo.classList.remove("hidden");
+
+                if (currentUser.role === "admin") {
+                    document.getElementById("adminControls").classList.remove("hidden");
+                }
+            }
+
+            function logout() {
+                currentUser = null;
+                document.getElementById("mainContent").classList.add("hidden");
+                document.getElementById("logoutBtn").classList.add("hidden");
+                document.getElementById("userInfo").classList.add("hidden");
+                document.querySelector(".btn-primary").classList.remove("hidden");
+                document.querySelector(".btn-secondary").classList.remove("hidden");
+                document.getElementById("adminControls").classList.add("hidden");
+            }
+
+            // Hiển thị danh sách đội
+            function displayTeams() {
+                const teamsList = document.getElementById("teamsList");
+                teamsList.innerHTML = "";
+
+                if (teams.length === 0) {
+                    teamsList.innerHTML = "<p>Chưa có đội nào được tạo. Vui lòng tạo đội thi đấu trước.</p>";
+                    return;
+                }
+
+                teams.forEach((team) => {
+                    const teamCard = document.createElement("div");
+                    teamCard.className = "player-card";
+                    teamCard.innerHTML = `
+                <h3>${team.name}</h3>
+                <p>${team.players.map((p) => p.username).join(" & ")}</p>
+                <span class="level-badge level-${team.level}">Level ${team.level}</span>
+                <p style="margin-top: 10px; font-size: 14px;">
+                    Trận đã đấu: ${team.wins + team.losses} | Điểm: ${team.points}
+                </p>
+            `;
+                    teamsList.appendChild(teamCard);
+                });
+
+                if (currentUser?.role === "admin" && teams.length >= 2) {
+                    document.getElementById("scheduleControls").classList.remove("hidden");
+                }
+            }
+
+            // Hiển thị danh sách thành viên
+            function displayPlayers() {
+                const playersList = document.getElementById("playersList");
+                playersList.innerHTML = "";
+
+                players.forEach((player) => {
+                    const playerCard = document.createElement("div");
+                    playerCard.className = "player-card";
+                    playerCard.innerHTML = `
+                    <h3>${player.username}</h3>
+                    <span class="level-badge level-${player.level}">Level ${player.level}</span>
+                    <p style="margin-top: 10px; font-size: 14px;">
+                        Đăng ký: ${new Date(player.registeredAt).toLocaleDateString("vi-VN")}
+                    </p>
+                `;
+                    playersList.appendChild(playerCard);
+                });
+            }
+
+            // Tạo lịch thi đấu
+            function generateMatches() {
+                if (players.length < 2) {
+                    alert("Cần ít nhất 2 thành viên để tạo lịch thi đấu!");
+                    return;
+                }
+
+                // Chia nhóm theo level
+                teams = [];
+                const levelGroups = { 1: [], 2: [], 3: [] };
+
+                players.forEach((player) => {
+                    levelGroups[player.level].push(player);
+                });
+
+                // Tạo nhóm 2 người cho mỗi level
+                Object.keys(levelGroups).forEach((level) => {
+                    const playersInLevel = levelGroups[level];
+                    for (let i = 0; i < playersInLevel.length - 1; i += 2) {
+                        if (playersInLevel[i + 1]) {
+                            teams.push({
+                                id: Date.now() + Math.random(),
+                                name: `Nhóm ${playersInLevel[i].username} & ${playersInLevel[i + 1].username}`,
+                                players: [playersInLevel[i], playersInLevel[i + 1]],
+                                level: parseInt(level),
+                                points: 0,
+                                wins: 0,
+                                losses: 0,
+                            });
+                        }
+                    }
+                });
+
+                // Tạo lịch thi đấu
+                matches = [];
+                for (let i = 0; i < teams.length - 1; i++) {
+                    for (let j = i + 1; j < teams.length; j++) {
+                        matches.push({
+                            id: Date.now() + Math.random(),
+                            team1: teams[i],
+                            team2: teams[j],
+                            date: new Date().toISOString().split("T")[0],
+                            status: "scheduled",
+                            result: null,
+                        });
+                    }
+                }
+
+                localStorage.setItem("teams", JSON.stringify(teams));
+                localStorage.setItem("matches", JSON.stringify(matches));
+
+                alert(`Đã tạo ${teams.length} nhóm và ${matches.length} trận đấu!`);
+                displayMatches();
+                displayResults();
+            }
+
+            // Hiển thị lịch thi đấu
+            function displayMatches() {
+                const matchesList = document.getElementById("matchesList");
+                matchesList.innerHTML = "";
+
+                if (matches.length === 0) {
+                    matchesList.innerHTML = "<p>Chưa có lịch thi đấu nào. Vui lòng tạo lịch thi đấu.</p>";
+                    return;
+                }
+
+                matches.forEach((match) => {
+                    const matchCard = document.createElement("div");
+                    matchCard.className = "match-card";
+                    matchCard.innerHTML = `
+                    <h3>Trận đấu #${match.id.toString().slice(-4)}</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin: 15px 0;">
+                        <div style="text-align: center; flex: 1;">
+                            <h4>${match.team1.name}</h4>
+                            <span class="level-badge level-${match.team1.level}">Level ${match.team1.level}</span>
+                        </div>
+                        <div style="padding: 0 20px; font-size: 24px; font-weight: bold;">VS</div>
+                        <div style="text-align: center; flex: 1;">
+                            <h4>${match.team2.name}</h4>
+                            <span class="level-badge level-${match.team2.level}">Level ${match.team2.level}</span>
+                        </div>
+                    </div>
+                    <p><strong>Ngày:</strong> ${new Date(match.date).toLocaleDateString("vi-VN")}</p>
+                    <p><strong>Trạng thái:</strong> ${match.status === "scheduled" ? "Chưa thi đấu" : "Đã hoàn thành"}</p>
+                    ${match.result ? `<p><strong>Kết quả:</strong> ${match.result.team1Score} - ${match.result.team2Score}</p>` : ""}
+                `;
+                    matchesList.appendChild(matchCard);
+                });
+            }
+
+            // Hiển thị form cập nhật kết quả
+            function displayResults() {
+                const resultsForm = document.getElementById("resultsForm");
+                resultsForm.innerHTML = "";
+
+                if (!currentUser || currentUser.role !== "admin") {
+                    resultsForm.innerHTML = "<p>Chỉ quản trị viên mới có thể cập nhật kết quả.</p>";
+                    return;
+                }
+
+                const pendingMatches = matches.filter((m) => m.status === "scheduled");
+
+                if (pendingMatches.length === 0) {
+                    resultsForm.innerHTML = "<p>Không có trận đấu nào cần cập nhật kết quả.</p>";
+                    return;
+                }
+
+                pendingMatches.forEach((match) => {
+                    const matchResult = document.createElement("div");
+                    matchResult.className = "match-result";
+                    matchResult.innerHTML = `
+                    <h4>Trận đấu: ${match.team1.name} vs ${match.team2.name}</h4>
+                    <div style="display: flex; align-items: center; gap: 10px; margin: 15px 0;">
+                        <span>${match.team1.name}</span>
+                        <input type="number" class="score-input" id="score1_${match.id}" min="0" max="30" placeholder="0">
+                        <span>-</span>
+                        <input type="number" class="score-input" id="score2_${match.id}" min="0" max="30" placeholder="0">
+                        <span>${match.team2.name}</span>
+                        <button class="btn btn-success" onclick="updateResult('${match.id}')">Cập nhật</button>
+                    </div>
+                `;
+                    resultsForm.appendChild(matchResult);
+                });
+            }
+
+            // Cập nhật kết quả trận đấu
+            function updateResult(matchId) {
+                const score1 = parseInt(document.getElementById(`score1_${matchId}`).value);
+                const score2 = parseInt(document.getElementById(`score2_${matchId}`).value);
+
+                if (isNaN(score1) || isNaN(score2)) {
+                    alert("Vui lòng nhập điểm số hợp lệ!");
+                    return;
+                }
+
+                const match = matches.find((m) => m.id == matchId);
+                if (!match) return;
+
+                match.result = { team1Score: score1, team2Score: score2 };
+                match.status = "completed";
+
+                // Cập nhật điểm cho các nhóm
+                const team1 = teams.find((t) => t.id === match.team1.id);
+                const team2 = teams.find((t) => t.id === match.team2.id);
+
+                if (score1 > score2) {
+                    team1.wins++;
+                    team1.points += 3;
+                    team2.losses++;
+                } else if (score2 > score1) {
+                    team2.wins++;
+                    team2.points += 3;
+                    team1.losses++;
+                } else {
+                    team1.points += 1;
+                    team2.points += 1;
+                }
+
+                // Lưu kết quả
+                const result = {
+                    id: Date.now(),
+                    matchId: match.id,
+                    date: new Date().toISOString(),
+                    team1: match.team1.name,
+                    team2: match.team2.name,
+                    score1,
+                    score2,
+                    winner: score1 > score2 ? match.team1.name : score2 > score1 ? match.team2.name : "Hòa",
+                };
+
+                results.push(result);
+
+                localStorage.setItem("matches", JSON.stringify(matches));
+                localStorage.setItem("teams", JSON.stringify(teams));
+                localStorage.setItem("results", JSON.stringify(results));
+
+                alert("Đã cập nhật kết quả thành công!");
+                displayMatches();
+                displayResults();
+                updateRanking();
+            }
+
+            // Cập nhật bảng xếp hạng
+            function updateRanking() {
+                const rankingBody = document.getElementById("rankingBody");
+                rankingBody.innerHTML = "";
+
+                const sortedTeams = [...teams].sort((a, b) => {
+                    if (b.points !== a.points) return b.points - a.points;
+                    return b.wins - a.wins;
+                });
+
+                sortedTeams.forEach((team, index) => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${team.name}</td>
+                    <td>${team.players.map((p) => p.username).join(", ")}</td>
+                    <td>${team.points}</td>
+                    <td>${team.wins}</td>
+                    <td>${team.losses}</td>
+                `;
+                    rankingBody.appendChild(row);
+                });
+            }
+
+            // Chuyển đổi tab
+            // Cập nhật hàm showTab để thêm tab teams
+            function showTab(tabName) {
+                document.querySelectorAll(".tab-content").forEach((tab) => tab.classList.add("hidden"));
+                document.querySelectorAll(".nav-tab").forEach((tab) => tab.classList.remove("active"));
+
+                document.getElementById(tabName + "Tab").classList.remove("hidden");
+                event.target.classList.add("active");
+
+                // Cập nhật nút điều khiển admin khi chuyển tab
+                if (currentUser?.role === "admin") {
+                    const showAdminControls = tabName === "players" || tabName === "teams";
+                    document.getElementById("adminControls").classList.toggle("hidden", !showAdminControls);
+
+                    const showScheduleControls = tabName === "teams" && teams.length >= 2;
+                    document.getElementById("scheduleControls").classList.toggle("hidden", !showScheduleControls);
+                }
+            }
+
+            // Xóa tất cả dữ liệu (chỉ admin)
+            function clearAllData() {
+                if (currentUser.role !== "admin") {
+                    alert("Chỉ quản trị viên mới có thể xóa dữ liệu!");
+                    return;
+                }
+
+                if (confirm("Bạn có chắc chắn muốn xóa tất cả dữ liệu? Hành động này không thể hoàn tác!")) {
+                    players = [];
+                    teams = [];
+                    matches = [];
+                    results = [];
+
+                    localStorage.removeItem("players");
+                    localStorage.removeItem("teams");
+                    localStorage.removeItem("matches");
+                    localStorage.removeItem("results");
+
+                    displayPlayers();
+                    displayMatches();
+                    displayResults();
+                    updateRanking();
+
+                    alert("Đã xóa tất cả dữ liệu!");
+                }
+            }
+
+            // Tạo đội thi đấu
+            function generateTeams() {
+                if (players.length < 2) {
+                    alert("Cần ít nhất 2 thành viên để tạo đội thi đấu!");
+                    return;
+                }
+
+                teams = [];
+                const levelGroups = { 1: [], 2: [], 3: [] };
+
+                // Xáo trộn ngẫu nhiên danh sách người chơi
+                const shuffledPlayers = [...players].sort(() => Math.random() - 0.5);
+
+                shuffledPlayers.forEach((player) => {
+                    levelGroups[player.level].push(player);
+                });
+
+                // Tạo đội 2 người cho mỗi level
+                Object.keys(levelGroups).forEach((level) => {
+                    const playersInLevel = levelGroups[level];
+                    for (let i = 0; i < playersInLevel.length - 1; i += 2) {
+                        if (playersInLevel[i + 1]) {
+                            teams.push({
+                                id: Date.now() + Math.random(),
+                                name: `Đội ${playersInLevel[i].username} & ${playersInLevel[i + 1].username}`,
+                                players: [playersInLevel[i], playersInLevel[i + 1]],
+                                level: parseInt(level),
+                                points: 0,
+                                wins: 0,
+                                losses: 0,
+                                lastMatchTime: 0, // Thời gian trận đấu cuối cùng
+                            });
+                        }
+                    }
+                });
+
+                localStorage.setItem("teams", JSON.stringify(teams));
+                alert(`Đã tạo ${teams.length} đội thi đấu!`);
+                displayTeams();
+                showTab("teams"); // Chuyển sang tab đội
+            }
+
+            // Tạo lịch thi đấu với thuật toán tránh các đội đấu liên tiếp
+            function generateSchedule() {
+                if (teams.length < 2) {
+                    alert("Cần ít nhất 2 đội để tạo lịch thi đấu!");
+                    return;
+                }
+
+                matches = [];
+                lastMatchTimes = {};
+
+                // Khởi tạo thời gian trận đấu cuối cho mỗi đội
+                teams.forEach((team) => {
+                    lastMatchTimes[team.id] = 0;
+                });
+
+                // Tạo danh sách các cặp đấu có thể
+                const possibleMatches = [];
+                for (let i = 0; i < teams.length - 1; i++) {
+                    for (let j = i + 1; j < teams.length; j++) {
+                        possibleMatches.push({
+                            team1: teams[i],
+                            team2: teams[j],
+                            priority: 0, // Ưu tiên ban đầu
+                        });
+                    }
+                }
+
+                // Sắp xếp các trận đấu ngẫu nhiên
+                possibleMatches.sort(() => Math.random() - 0.5);
+
+                // Tạo lịch thi đấu
+                let currentTime = 1;
+                const scheduledMatches = [];
+                const matchCount = Math.min(possibleMatches.length, teams.length * 2); // Giới hạn số trận
+
+                while (scheduledMatches.length < matchCount && possibleMatches.length > 0) {
+                    // Tính toán độ ưu tiên dựa trên thời gian nghỉ của các đội
+                    possibleMatches.forEach((match) => {
+                        const timeSinceTeam1 = currentTime - lastMatchTimes[match.team1.id];
+                        const timeSinceTeam2 = currentTime - lastMatchTimes[match.team2.id];
+                        match.priority = Math.min(timeSinceTeam1, timeSinceTeam2);
+                    });
+
+                    // Sắp xếp theo độ ưu tiên giảm dần
+                    possibleMatches.sort((a, b) => b.priority - a.priority);
+
+                    // Chọn trận có độ ưu tiên cao nhất
+                    const nextMatch = possibleMatches.shift();
+
+                    // Thêm trận đấu vào lịch
+                    scheduledMatches.push({
+                        id: Date.now() + Math.random(),
+                        team1: nextMatch.team1,
+                        team2: nextMatch.team2,
+                        date: new Date().toISOString().split("T")[0],
+                        timeSlot: currentTime,
+                        status: "scheduled",
+                        result: null,
+                    });
+
+                    // Cập nhật thời gian trận đấu cuối của các đội
+                    lastMatchTimes[nextMatch.team1.id] = currentTime;
+                    lastMatchTimes[nextMatch.team2.id] = currentTime;
+
+                    // Tăng thời gian cho trận tiếp theo
+                    currentTime++;
+                }
+
+                matches = scheduledMatches;
+                localStorage.setItem("matches", JSON.stringify(matches));
+                alert(`Đã tạo ${matches.length} trận đấu! Các đội không phải đấu liên tiếp.`);
+                displayMatches();
+                showTab("matches"); // Chuyển sang tab lịch đấu
+            }
+
+        </script>
+    </body>
+</html>
